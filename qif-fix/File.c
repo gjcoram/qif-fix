@@ -156,7 +156,7 @@ char *file_convert(char *buf)
 	p = buf;
 	q = nbuf;
 	while (*p != '\0') {
-		if (*p == 'D' && p > buf && *(p-1) == '\r') {
+		if (*p == 'D' && p > buf && (*(p-1) == '\r' || *(p-1) == '\n')) {
 			// date
 			int slashes = 0;
 			while (*p != '\0' && *p != '\n' && *p != '\r') {
@@ -165,7 +165,8 @@ char *file_convert(char *buf)
 				}
 				*(q++) = *(p++);
 				if (slashes == 2) {
-					if (*p == '9') {
+					// 50-99 assumed to be 1950-1999
+					if (*p == '9' || *p == '8' || *p == '7' || *p == '6' || *p == '5') {
 						*(q++) = '1';
 						*(q++) = '9';
 					} else {
